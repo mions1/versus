@@ -60,7 +60,7 @@ class DisplayFinish: Activity() {
         var tot = n_rights+n_wrongs
         var score = (n_rights*tot)/n_wrongs
 
-        tvScore!!.text = "Score: ${Math.round(score * 100) / 100.0} score"
+        tvScore!!.text = "Score: ${Math.round(score * 100) / 100.0}"
 
     }
 
