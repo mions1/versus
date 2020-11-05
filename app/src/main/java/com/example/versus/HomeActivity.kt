@@ -35,6 +35,7 @@ class HomeActivity: Activity() {
     fun arcade(v: View) {
         var intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     fun exit(v: View) {

@@ -47,7 +47,7 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener, GestureDetec
         llA = findViewById(R.id.llA)
         llB = findViewById(R.id.llB)
         tvTimer = findViewById(R.id.tvTimer)
-        tvTimer!!.text = "00:03"
+        tvTimer!!.text = "00:20"
         gestureDetector = GestureDetector(this, this)
         gestureDetector!!.setOnDoubleTapListener(this)
     }
