@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="topic_text_size">18dp</dimen>
+    <dimen name="category_text_size">25dp</dimen>
+    <dimen name="newword_text_size">25dp</dimen>
+
+</resources>
