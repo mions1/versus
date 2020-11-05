@@ -5,7 +5,7 @@ import kotlin.random.Random
 data class Category(var topic: String, var left: String, var right: String)
 data class Alternatives(var words: HashMap<String,Int>)
 data class Answers(var left: ArrayList<String>, var right: ArrayList<String>)
-data class Results(var right: Int, var wrong: Int)
+data class Results(var right: Int, var wrong: Int, var rights: ArrayList<String>, var wrongs: ArrayList<String>)
 
 class Game {
 
@@ -46,7 +46,7 @@ class Game {
         this.category = Game.CATEGORIES.get(index)
         this.alternatives = ArrayList(Game.ALTERNATIVES.get(index).words.keys)
         this.answers = Answers(ArrayList<String>(), ArrayList<String>())
-        this.results = Results(0,0)
+        this.results = Results(0,0, ArrayList(), ArrayList())
         this.index = index
         getRandomWord()
     }
@@ -80,14 +80,22 @@ class Game {
     private fun computeResults(): Results {
         for ( (word,ans) in Game.ALTERNATIVES[this.index!!].words ) {
             Log.d("Results: ", word+": "+ans)
-            if (word in this.answers!!.left && ans == 0)
-                this.results!!.right ++
-            else if (word in this.answers!!.right && ans == 1)
-                this.results!!.right ++
-            else if (word in this.answers!!.left && ans == 1)
-                this.results!!.wrong ++
-            else if (word in this.answers!!.right && ans == 0)
-                this.results!!.wrong ++
+            if (word in this.answers!!.left && ans == 0) {
+                this.results!!.right++
+                this.results!!.rights.add(word)
+            }
+            else if (word in this.answers!!.right && ans == 1) {
+                this.results!!.right++
+                this.results!!.rights.add(word)
+            }
+            else if (word in this.answers!!.left && ans == 1) {
+                this.results!!.wrong++
+                this.results!!.wrongs.add(word)
+            }
+            else if (word in this.answers!!.right && ans == 0) {
+                this.results!!.wrong++
+                this.results!!.wrongs.add(word)
+            }
         }
         Log.d("MyAnsw: ", this.answers!!.toString() )
         return this.results!!

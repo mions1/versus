@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.versus.arcade.Game
+import com.example.versus.gui.DisplayFinish
 import java.util.*
 import kotlin.concurrent.timer
 
@@ -47,7 +48,7 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener, GestureDetec
         llA = findViewById(R.id.llA)
         llB = findViewById(R.id.llB)
         tvTimer = findViewById(R.id.tvTimer)
-        tvTimer!!.text = "00:20"
+        tvTimer!!.text = "00:17"
         gestureDetector = GestureDetector(this, this)
         gestureDetector!!.setOnDoubleTapListener(this)
     }
@@ -189,11 +190,11 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener, GestureDetec
     }
 
     override fun finish() {
-        var right = game!!.getResults().right
-        var wrong = game!!.getResults().wrong
-        var intent: Intent = Intent(this, HomeActivity::class.java).apply {
-            putExtra("Right", right)
-            putExtra("Wrong", wrong)
+        var rights = game!!.getResults().rights
+        var wrongs = game!!.getResults().wrongs
+        var intent: Intent = Intent(this, DisplayFinish::class.java).apply {
+            putExtra("rights", rights)
+            putExtra("wrongs", wrongs)
         }
         startActivity(intent)
         super.finish()
