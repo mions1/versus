@@ -94,6 +94,8 @@ class Game {
     }
 
     fun getResults(): Results {
+        if (results!!.right == 0 && results!!.wrong == 0)
+            computeResults()
         return results!!
     }
 
