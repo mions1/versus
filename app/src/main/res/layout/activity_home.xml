@@ -41,6 +41,7 @@
             android:text="Esci"
             android:onClick="exit"
             />
+
     </LinearLayout>
 
     <LinearLayout
@@ -48,32 +49,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <TextView
-            android:layout_width="wrap_content"
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Last score: "
-            android:layout_gravity="left"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/tvRight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#00FF00"
-            android:text=""
-            android:layout_gravity="bottom"
-            android:gravity="center_horizontal"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:id="@+id/tvWrong"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#FF0000"
-            android:text=""
-            android:layout_gravity="bottom"
-            android:gravity="right"
-            android:layout_weight="1"/>
+            />
 
     </LinearLayout>
 

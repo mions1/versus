@@ -55,10 +55,10 @@ class DisplayFinish: Activity() {
         tvTotalWrong!!.text = "Totale: "+wrongs!!.size.toString()
 
 
-        var n_rights = rights!!.size.toFloat()
-        var n_wrongs = wrongs!!.size.toFloat()
-        var tot = n_rights+n_wrongs
-        var score = (n_rights*tot)/n_wrongs
+        val n_rights = rights!!.size.toFloat()
+        val n_wrongs = wrongs!!.size.toFloat()
+        val tot = n_rights+n_wrongs
+        val score = (n_rights*tot)/n_wrongs
 
         tvScore!!.text = "Score: ${Math.round(score * 100) / 100.0}"
 
