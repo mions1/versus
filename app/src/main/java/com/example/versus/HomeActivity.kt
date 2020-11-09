@@ -3,10 +3,14 @@ package com.example.versus
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.example.versus.arcade.Alternatives
+import com.example.versus.arcade.Category
+import com.example.versus.gui.ScoresActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -14,6 +18,8 @@ import com.google.android.gms.common.SignInButton
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class HomeActivity: Activity(), View.OnClickListener {
 
@@ -32,6 +38,7 @@ class HomeActivity: Activity(), View.OnClickListener {
         loginApp = LoginApp()
 
         btnLogin!!.setOnClickListener(this)
+        login()
     }
 
     private fun login() {
@@ -63,6 +70,7 @@ class HomeActivity: Activity(), View.OnClickListener {
 
                     if (v is TextView) {
                         var tv: TextView = v
+                        saveUser()
                         tv.text = "Bentornato, ${user!!.displayName}"
                     }
                 }
@@ -70,8 +78,38 @@ class HomeActivity: Activity(), View.OnClickListener {
         }
     }
 
+    private fun saveUser() {
+
+        val db = Firebase.firestore
+        val db_users = db.collection("users")
+
+        db_users.document(user!!.uid).get().addOnSuccessListener { document ->
+            if (document.get("uid") == null) {
+                Log.d("TAG_ADD_USERS", "User not found: CREATE")
+                var tmp_user = hashMapOf(
+                    "uid" to user!!.uid,
+                    "score_count" to 0
+                )
+                db_users.document(user!!.uid).set(tmp_user)
+            }
+            else {
+                Log.d("TAG_ADD_USERS", "User found: "+document.get("uid"))
+            }
+        }
+    }
+
     fun arcade(v: View) {
         var intent = Intent(this, MainActivity::class.java)
+        if (user != null)
+            intent.putExtra("uid", user!!.uid)
+        else
+            intent.putExtra("uid", 0)
+        startActivity(intent)
+        finish()
+    }
+
+    fun scores(v: View) {
+        var intent = Intent(this, ScoresActivity::class.java)
         if (user != null)
             intent.putExtra("uid", user!!.uid)
         else

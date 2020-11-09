@@ -68,7 +68,7 @@ class DisplayFinish: Activity() {
 
         tvScore!!.text = "Score: ${Math.round(score * 100) / 100.0}"
 
-        // FIXME: Finisci la roba dei dati
+
         var result = hashMapOf(
             "uid" to intent.getStringExtra("uid"),
             "category_id" to intent.getIntExtra("category_id", 0),
@@ -76,14 +76,23 @@ class DisplayFinish: Activity() {
         )
 
         val db = Firebase.firestore
-        db.collection("results")
-            .add(result)
-            .addOnSuccessListener { documentReference ->
-                Log.d("TAG_STORE_DATA", "DocumentSnapshot added with ID: ${documentReference.id}")
-            }
-            .addOnFailureListener {e ->
-                Log.d("TAG_STORE_DATA", "Error adding document", e)
-            }
+        db.collection("results").document(intent.getStringExtra("uid")!!+"_"+getAndIncScoreCount().toString()).set(result)
+        Log.d("TAG_ADD_RESULT", "ADD result to: "+intent.getStringExtra("uid")!!)
+    }
+
+    private fun getAndIncScoreCount(): Int {
+        val db = Firebase.firestore
+        var db_users = db.collection("users")
+        var user = db_users.document(intent.getStringExtra("uid")!!).get()
+
+        while (!user.isComplete) { }
+
+        if (user.result?.data == null ) { return 0 }
+
+        var count = user.result?.get("score_count")!!.toString().toInt()
+        db_users.document(intent.getStringExtra("uid")!!).update("score_count", count+1)
+
+        return user.result?.get("score_count")!!.toString().toInt()
     }
 
     fun close(v: View) {
