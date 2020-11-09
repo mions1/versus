@@ -1,9 +1,11 @@
 package com.example.versus.arcade
 import android.util.Log
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlin.random.Random
 
-data class Category(var topic: String, var left: String, var right: String)
-data class Alternatives(var words: HashMap<String,Int>)
+data class Category(var id: Int, var topic: String, var left: String, var right: String)
+data class Alternatives(var id: Int, var words: HashMap<String,Int>)
 data class Answers(var left: ArrayList<String>, var right: ArrayList<String>)
 data class Results(var right: Int, var wrong: Int, var rights: ArrayList<String>, var wrongs: ArrayList<String>)
 
@@ -16,35 +18,63 @@ class Game {
     private var index: Int? = null
     private var word: String? = null
 
+    private var CATEGORIES: ArrayList<Category>? = null
+    private var ALTERNATIVES: ArrayList<Alternatives>? = null
+
     public var gameover: Boolean = false
 
+    init {
+        Log.d("TAG_INIT_GAME","INIT_GAME")
+
+        CATEGORIES = ArrayList()
+        ALTERNATIVES = ArrayList()
+
+        val db = Firebase.firestore
+        val db_categories = db.collection("categories")
+        val db_alternatives = db.collection("alternatives")
+
+        var i: Int = 0
+        var end = false
+        while (!end) {
+            var category = db_categories.document(i.toString()).get()
+            var alternatives = db_alternatives.document(i.toString()).get()
+
+            while (!category.isComplete) { }
+            while (!alternatives.isComplete) { }
+
+            if (category.result?.data == null) { break }
+
+            var tmp_category = Category(i,
+                                category.result?.get("topic")!!.toString(),
+                                category.result?.get("left")!!.toString(),
+                                category.result?.get("right")!!.toString()
+                                )
+
+            var tmp_alternatives = HashMap<String, Int>()
+            for (left in alternatives.result?.get("left") as ArrayList<String>) {
+                tmp_alternatives[left] = 0
+            }
+            for (right in alternatives.result?.get("right") as ArrayList<String>) {
+                tmp_alternatives[right] = 1
+            }
+
+            CATEGORIES!!.add(tmp_category)
+            ALTERNATIVES!!.add(Alternatives(i, tmp_alternatives))
+
+            i += 1
+        }
+
+        Log.d("TAG_ALL_CATEGORIES", CATEGORIES.toString())
+        Log.d("TAG_ALL_ALTERNATIVES", ALTERNATIVES.toString())
+    }
+
     companion object {
-        private val CATEGORIES = arrayListOf<Category>(
-            Category("Animali", "Fattoria", "Casa"),
-            Category("Film&Series", "Film", "Serie TV")
-        )
-        private val ALTERNATIVES = arrayListOf<Alternatives>(
-            Alternatives( hashMapOf(
-                            "Oca" to 0, "Asino" to 0, "Pavone" to 0, "Papera" to 0, "Mucca" to 0,
-                            "Pecora" to 0, "Cavallo" to 0,  "Maiale" to 0, "Gallina" to 0, "Quaglia" to 0,
-                            "cane" to 1, "Gatto" to 1, "Criceto" to 1, "Pesciolino rosso" to 1, "Coniglietto" to 1,
-                            "Porcellino D'India" to 1, "Sauro" to 1, "Canarino" to 1, "Furetto" to 1, "Cincillà" to 1
-                        )
-            ),
-            Alternatives( hashMapOf(
-                            "Il Signore degli Anelli: La Compagnia dell'Anello" to 0, "Batman: Begins" to 0, "Matrix Reloaded" to 0, "Una Settimana da Dio" to 0, "Tenet" to 0,
-                            "Harry Potter e la Pietra Filosofale" to 0, "The Prestige" to 0, "The Ring" to 0, "Titanic" to 0, "Colazione da Tiffany" to 0,
-                            "Stranger Things" to 1, "Umbrella Academy" to 1, "How I Met Your Mother" to 1, "Supernatural" to 1, "Game of Thrones" to 1,
-                            "The Boys" to 1, "Breaking Bad" to 1, "Friends" to 1, "You" to 1, "Scrubs" to 1
-                        )
-            )
-        )
     }
 
     fun pickRandomCategory() {
-        var index: Int = Random.nextInt(Game.CATEGORIES.size)
-        this.category = Game.CATEGORIES.get(index)
-        this.alternatives = ArrayList(Game.ALTERNATIVES.get(index).words.keys)
+        var index: Int = Random.nextInt(CATEGORIES!!.size)
+        this.category = this.CATEGORIES!!.get(index)
+        this.alternatives = ArrayList(this.ALTERNATIVES!!.get(index).words.keys)
         this.answers = Answers(ArrayList<String>(), ArrayList<String>())
         this.results = Results(0,0, ArrayList(), ArrayList())
         this.index = index
@@ -78,7 +108,7 @@ class Game {
     }
 
     private fun computeResults(): Results {
-        for ( (word,ans) in Game.ALTERNATIVES[this.index!!].words ) {
+        for ( (word,ans) in this.ALTERNATIVES!![this.index!!].words ) {
             Log.d("Results: ", word+": "+ans)
             if (word in this.answers!!.left && ans == 0) {
                 this.results!!.right++

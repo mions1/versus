@@ -13,12 +13,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class HomeActivity: Activity(), View.OnClickListener {
 
     var btnLogin: SignInButton? = null
     var loginApp: LoginApp? = null
 
+    private var user: FirebaseUser? = null
 
     private val RC_SIGN_IN = 1
 
@@ -33,7 +35,6 @@ class HomeActivity: Activity(), View.OnClickListener {
     }
 
     private fun login() {
-        Toast.makeText(this, "LOGIN", Toast.LENGTH_LONG).show()
         // Choose authentication providers
         val providers = arrayListOf(
             AuthUI.IdpConfig.GoogleBuilder().build())
@@ -55,7 +56,8 @@ class HomeActivity: Activity(), View.OnClickListener {
 
             if (resultCode == Activity.RESULT_OK) {
                 // Successfully signed in
-                val user = FirebaseAuth.getInstance().currentUser
+                user = FirebaseAuth.getInstance().currentUser
+
                 for (i in 0..btnLogin!!.childCount) {
                     var v: View? = btnLogin!!.getChildAt(i)
 
@@ -70,6 +72,10 @@ class HomeActivity: Activity(), View.OnClickListener {
 
     fun arcade(v: View) {
         var intent = Intent(this, MainActivity::class.java)
+        if (user != null)
+            intent.putExtra("uid", user!!.uid)
+        else
+            intent.putExtra("uid", 0)
         startActivity(intent)
         finish()
     }

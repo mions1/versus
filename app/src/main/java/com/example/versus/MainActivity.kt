@@ -36,6 +36,7 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener, GestureDetec
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("TAG_VERBOSE", "MainActivity OnCreate")
         setContentView(R.layout.activity_arcade)
 
         game = Game()
@@ -190,11 +191,14 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener, GestureDetec
     }
 
     override fun finish() {
+        var uid = intent.getStringExtra("uid")
         var rights = game!!.getResults().rights
         var wrongs = game!!.getResults().wrongs
         var intent: Intent = Intent(this, DisplayFinish::class.java).apply {
             putExtra("rights", rights)
             putExtra("wrongs", wrongs)
+            putExtra("category_id", game!!.getCategory().id)
+            putExtra("uid", uid)
         }
         startActivity(intent)
         super.finish()
