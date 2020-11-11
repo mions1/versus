@@ -2,18 +2,21 @@ package com.example.versus
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Point
 import android.os.Bundle
 import android.os.Handler
-import android.os.HandlerThread
 import android.util.Log
-import android.view.*
+import android.view.GestureDetector
+import android.view.Gravity
+import android.view.MotionEvent
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.versus.arcade.Game
 import com.example.versus.gui.DisplayFinish
 import java.util.*
-import kotlin.concurrent.timer
+
 
 /**
  * This activity is for the game screen
@@ -134,38 +137,18 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener, GestureDetec
         velocityY: Float
     ): Boolean {
 
-        // retrive current word
-        var word: TextView = TextView(this)
-        word.text = tvWord!!.text.toString()
-        word.width = ViewGroup.LayoutParams.MATCH_PARENT
-
-
         var goOn: Boolean = false
+
         // add the word in the choosed side
         if (e1!!.x > e2!!.x + 120) {
             Log.d("TAG", "Swipe to left")
-            game!!.getAnswers().left.add(tvWord!!.text.toString())
-            llA!!.addView(word)
-            goOn = true
+            goOn = onChoose("left")
         } else if (e1!!.x + 120 < e2!!.x) {
             Log.d("TAG", "Swipe to right")
-            game!!.getAnswers().right.add(tvWord!!.text.toString())
-            word.gravity = Gravity.RIGHT
-            llB!!.addView(word)
-            goOn = true
+            goOn = onChoose("right")
         }
 
-        // if the game is over, finish, otherwise go on
-        game!!.goOn()
-        if (game!!.gameover) {
-            finish()
-        }
-
-        // if go on, pick the next word
-        if (goOn)
-            tvWord!!.text = game!!.getWord()
-
-        return true
+        return goOn
     }
 
     override fun onScroll(
@@ -192,9 +175,85 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener, GestureDetec
         return true
     }
 
+    /**
+     * Handle tap
+     *
+     * if tap on the left, the word goes on the left and vice versa
+     */
     override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
         Log.d("TAG", "Single Tap Confirmed")
+        val display = windowManager.defaultDisplay
+        val size = Point()
+        display.getRealSize(size)
+        val width: Int = size.x
+        val height: Int = size.y
+
+        var goOn: Boolean = false
+        if (e!!.y < height-200 && e!!.y > 200) {
+            if (e!!.x < (width/2)-10 && e!!.x > 10) {
+                goOn = onChoose("left")
+            }
+            else if (e!!.x < width-10 && e!!.x > (width/2)+10) {
+                goOn = onChoose("right")
+            }
+        }
+
+        return goOn
+    }
+
+    /**
+     * If user taps or swipes on the left
+     *
+     * add the word on the left side
+     */
+    private fun onLeft(word: TextView): Boolean {
+        game!!.getAnswers().left.add(tvWord!!.text.toString())
+        llA!!.addView(word)
         return true
+    }
+
+    /**
+     * If user taps or swipes on the right
+     *
+     * add the word on the right side
+     */
+    private fun onRight(word: TextView): Boolean {
+        game!!.getAnswers().right.add(tvWord!!.text.toString())
+        word.gravity = Gravity.RIGHT
+        llB!!.addView(word)
+        return true
+    }
+
+    /**
+     * Accordly with the side, the word goes on the left or on the right
+     */
+    private fun onChoose(side: String): Boolean {
+
+        var word: TextView = TextView(this)
+        word.text = tvWord!!.text.toString()
+        word.width = ViewGroup.LayoutParams.MATCH_PARENT
+
+        var goOn: Boolean = false
+        if (side == "left") {
+            onLeft(word)
+            goOn = true
+        }
+        else if (side == "right") {
+            onRight(word)
+            goOn = true
+        }
+
+        // if the game is over, finish, otherwise go on
+        game!!.goOn()
+        if (game!!.gameover) {
+            finish()
+        }
+
+        // if go on, pick the next word
+        if (goOn)
+            tvWord!!.text = game!!.getWord()
+
+        return goOn
     }
 
     /**
