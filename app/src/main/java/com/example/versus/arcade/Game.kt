@@ -9,20 +9,30 @@ data class Alternatives(var id: Int, var words: HashMap<String,Int>)
 data class Answers(var left: ArrayList<String>, var right: ArrayList<String>)
 data class Results(var right: Int, var wrong: Int, var rights: ArrayList<String>, var wrongs: ArrayList<String>)
 
+/**
+ * This class handle the game
+ *
+ * Retrive categories stored in firestore
+ * When a game starts, pick a random category and start the game
+ * If the words are finished, gameover (but maybe the game can over just for expired timer)
+ */
 class Game {
 
-    private var category: Category? = null
-    private var alternatives: ArrayList<String>? = null
-    private var answers: Answers? = null
-    private var results: Results? = null
-    private var index: Int? = null
-    private var word: String? = null
+    private var category: Category? = null                  // category picked
+    private var alternatives: ArrayList<String>? = null     // words list of the picked category
+    private var answers: Answers? = null                    // user's answers list
+    private var results: Results? = null                    // it store how many rights and wrongs, and list of them
+    private var index: Int? = null                          // category/alternatives id
+    private var word: String? = null                        // current word
 
-    private var CATEGORIES: ArrayList<Category>? = null
-    private var ALTERNATIVES: ArrayList<Alternatives>? = null
+    private var CATEGORIES: ArrayList<Category>? = null         // all possible categories
+    private var ALTERNATIVES: ArrayList<Alternatives>? = null   // categories' words list
 
-    public var gameover: Boolean = false
+    var gameover: Boolean = false
 
+    /**
+     * Retrive categories and alternatives from firestore
+     */
     init {
         Log.d("TAG_INIT_GAME","INIT_GAME")
 
@@ -68,9 +78,9 @@ class Game {
         Log.d("TAG_ALL_ALTERNATIVES", ALTERNATIVES.toString())
     }
 
-    companion object {
-    }
-
+    /**
+     * Pick a random category from the pool and set all associated fields
+     */
     fun pickRandomCategory() {
         var index: Int = Random.nextInt(CATEGORIES!!.size)
         this.category = this.CATEGORIES!!.get(index)
@@ -81,6 +91,11 @@ class Game {
         getRandomWord()
     }
 
+    /**
+     * Pick the next word in alternatives (by getRandomWord())
+     *
+     * @return true if there is another, false if they are finished (but maybe it can never happens)
+     */
     fun goOn(): Boolean {
         if (this.word == null) {
             getRandomWord()
@@ -95,6 +110,11 @@ class Game {
         return true
     }
 
+    /**
+     * Get the next word randomly
+     *
+     * @return true if there is another, false if they are finished (but maybe it can never happens)
+     */
     private fun getRandomWord(): Boolean {
         if (alternatives == null)
             this.pickRandomCategory()
@@ -107,6 +127,11 @@ class Game {
         return true
     }
 
+    /**
+     * When the game is over, compute result
+     *
+     * Counts how many rights and wrongs it did, and store them into the related list
+     */
     private fun computeResults(): Results {
         for ( (word,ans) in this.ALTERNATIVES!![this.index!!].words ) {
             Log.d("Results: ", word+": "+ans)
@@ -131,6 +156,9 @@ class Game {
         return this.results!!
     }
 
+    /**
+     * Return the result computed by computeResults()
+     */
     fun getResults(): Results {
         if (results!!.right == 0 && results!!.wrong == 0)
             computeResults()

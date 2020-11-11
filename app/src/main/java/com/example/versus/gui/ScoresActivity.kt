@@ -14,7 +14,9 @@ import com.example.versus.arcade.Category
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-
+/**
+ * Show latest scores from greater to lower
+ */
 class ScoresActivity: Activity() {
 
     private var lvScores: ListView? = null

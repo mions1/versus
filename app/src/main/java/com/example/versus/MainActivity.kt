@@ -15,7 +15,17 @@ import com.example.versus.gui.DisplayFinish
 import java.util.*
 import kotlin.concurrent.timer
 
-
+/**
+ * This activity is for the game screen
+ *
+ * It is split into two columns: left (A) and right (B)
+ * There is a Topic and two categories: on the left (A) and on the right (B)
+ * There is also a Word and the goal is to put the word in the right category by swipe on the left or on the right
+ * You have to do the right choose before the timer is expired: the most you do, the greater score you'll have
+ *
+ * In the end, DispalyFinish activity will be showed and the game is over
+ *
+ */
 class MainActivity : Activity(), GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
     private var tvWord: TextView? = null
@@ -34,6 +44,9 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener, GestureDetec
 
     private lateinit var gestureDetector: GestureDetector
 
+    /**
+     * Retrive layout widgets and set listeners for timer and swipe detector
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("TAG_VERBOSE", "MainActivity OnCreate")
@@ -54,19 +67,27 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener, GestureDetec
         gestureDetector!!.setOnDoubleTapListener(this)
     }
 
+    /**
+     * Retrive and set topic, categories and the first word
+     */
     override fun onStart() {
         super.onStart()
+
+        // get date for initialize timer
         val date = GregorianCalendar.getInstance();
         date.set(Calendar.HOUR_OF_DAY, 10);
         date.set(Calendar.MINUTE, 49);
 
+        // retrive category
         game!!.pickRandomCategory()
 
+        // set up game
         tvTopic!!.setText(game!!.getCategory().topic)
         tvCategoryA!!.setText(game!!.getCategory().left)
         tvCategoryB!!.setText(game!!.getCategory().right)
         tvWord!!.setText(game!!.getWord())
 
+        // initialize and start timer
         updateHandler = Handler()
         runnable = Runnable {
             getAndSetNewTime(tvTimer!!.text.toString()) // some action(s)
@@ -78,6 +99,7 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener, GestureDetec
 
     override fun onDestroy() {
         super.onDestroy()
+        // stop timer
         updateHandler!!.removeCallbacks(runnable!!);
     }
 
@@ -100,6 +122,11 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener, GestureDetec
         return true
     }
 
+    /**
+     * Handle swipe
+     *
+     * if swipe on the left, the word goes on the left and vice versa
+     */
     override fun onFling(
         e1: MotionEvent?,
         e2: MotionEvent?,
@@ -107,12 +134,14 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener, GestureDetec
         velocityY: Float
     ): Boolean {
 
+        // retrive current word
         var word: TextView = TextView(this)
         word.text = tvWord!!.text.toString()
         word.width = ViewGroup.LayoutParams.MATCH_PARENT
 
 
         var goOn: Boolean = false
+        // add the word in the choosed side
         if (e1!!.x > e2!!.x + 120) {
             Log.d("TAG", "Swipe to left")
             game!!.getAnswers().left.add(tvWord!!.text.toString())
@@ -126,11 +155,13 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener, GestureDetec
             goOn = true
         }
 
+        // if the game is over, finish, otherwise go on
         game!!.goOn()
         if (game!!.gameover) {
             finish()
         }
 
+        // if go on, pick the next word
         if (goOn)
             tvWord!!.text = game!!.getWord()
 
@@ -166,6 +197,15 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener, GestureDetec
         return true
     }
 
+    /**
+     * Every second, decrease timer and blink
+     *
+     * if timer is < 10, put a 0 before the actual second
+     * if time is over, finish
+     *
+     * @param time current time
+     * @return new time to set into the timer
+     */
     fun getAndSetNewTime(time: String): String {
         var sec = time.substring(time.indexOf(":") + 1).toInt()
         sec--
@@ -190,6 +230,9 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener, GestureDetec
         return "00:" + sec.toString()
     }
 
+    /**
+     * When the game is over, call DisplayFinish and pass the result
+     */
     override fun finish() {
         var uid = intent.getStringExtra("uid")
         var rights = game!!.getResults().rights

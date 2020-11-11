@@ -14,7 +14,9 @@ import com.example.versus.R
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-
+/**
+ * Shows friends list and it allows to add a new one
+ */
 class FriendsActivity: Activity() {
 
     private var lvFriends: ListView? = null
@@ -31,6 +33,11 @@ class FriendsActivity: Activity() {
         refresh()
     }
 
+    /**
+     * Add a user as a friend if it exists
+     *
+     * Add the requested user in user's friends lists in firestore
+     */
     fun addFriend(v: View) {
         var friend = etFriend!!.text.toString()
 
@@ -68,10 +75,16 @@ class FriendsActivity: Activity() {
         refresh()
     }
 
+    /**
+     * Check if the user that the user is trying to add exists
+     *
+     * @return true if the user exists, false otherwise
+     */
     private fun searchFriend(friend: String): Boolean {
         val db = Firebase.firestore
         val db_users = db.collection("users")
 
+        // search for user
         val query = db_users.whereEqualTo("name", friend)
 
         var query_result = query.get()
@@ -88,6 +101,9 @@ class FriendsActivity: Activity() {
         }
     }
 
+    /**
+     * After adding a friends, refresh the list
+     */
     private fun refresh() {
         val db = Firebase.firestore
         val db_results = db.collection("friends")
@@ -110,6 +126,9 @@ class FriendsActivity: Activity() {
         finish()
     }
 
+    /**
+     * Return in home
+     */
     override fun finish() {
         var intent: Intent? = Intent(this, HomeActivity::class.java)
         startActivity(intent)

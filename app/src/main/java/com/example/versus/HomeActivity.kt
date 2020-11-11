@@ -22,6 +22,18 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
+/**
+ * First activity showed
+ *
+ * There is the menu:
+ *      - Arcade: start a math
+ *      - Scores: show latest scores from greater to lower
+ *      - Friends: show friends list
+ *      - Exit: exit from the app
+ *      - Accedi: login with google account
+ *
+ * Login is perform at the app start
+ */
 class HomeActivity: Activity(), View.OnClickListener {
 
     var btnLogin: SignInButton? = null
@@ -42,6 +54,9 @@ class HomeActivity: Activity(), View.OnClickListener {
         login()
     }
 
+    /**
+     * It performs login with google account
+     */
     private fun login() {
         // Choose authentication providers
         val providers = arrayListOf(
@@ -56,6 +71,11 @@ class HomeActivity: Activity(), View.OnClickListener {
             RC_SIGN_IN)
     }
 
+    /**
+     * Return from login
+     *
+     * On success, and it is the first login, save user in firestore
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -79,6 +99,12 @@ class HomeActivity: Activity(), View.OnClickListener {
         }
     }
 
+    /**
+     * Add user into firestore at the first login
+     *
+     * Save uid (unique), displayName and score_count to 0
+     * score_count counts how many games the user did
+     */
     private fun saveUser() {
 
         val db = Firebase.firestore
@@ -100,6 +126,9 @@ class HomeActivity: Activity(), View.OnClickListener {
         }
     }
 
+    /**
+     * Start a game
+     */
     fun arcade(v: View) {
         var intent = Intent(this, MainActivity::class.java)
         if (user != null)
@@ -110,6 +139,9 @@ class HomeActivity: Activity(), View.OnClickListener {
         finish()
     }
 
+    /**
+     * Show friends list
+     */
     fun friends(v: View) {
         var intent = Intent(this, FriendsActivity::class.java)
         if (user != null)
@@ -120,6 +152,9 @@ class HomeActivity: Activity(), View.OnClickListener {
         finish()
     }
 
+    /**
+     * Show user's scores
+     */
     fun scores(v: View) {
         var intent = Intent(this, ScoresActivity::class.java)
         if (user != null)
@@ -130,10 +165,16 @@ class HomeActivity: Activity(), View.OnClickListener {
         finish()
     }
 
+    /**
+     * Exit from the app
+     */
     fun exit(v: View) {
         finish()
     }
 
+    /**
+     * Login
+     */
     override fun onClick(v: View?) {
         if (v!!.id == btnLogin!!.id) {
             login()
