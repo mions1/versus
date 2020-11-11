@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.versus.arcade.Alternatives
 import com.example.versus.arcade.Category
+import com.example.versus.gui.FriendsActivity
 import com.example.versus.gui.ScoresActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
@@ -88,7 +89,8 @@ class HomeActivity: Activity(), View.OnClickListener {
                 Log.d("TAG_ADD_USERS", "User not found: CREATE")
                 var tmp_user = hashMapOf(
                     "uid" to user!!.uid,
-                    "score_count" to 0
+                    "score_count" to 0,
+                    "name" to user!!.displayName
                 )
                 db_users.document(user!!.uid).set(tmp_user)
             }
@@ -100,6 +102,16 @@ class HomeActivity: Activity(), View.OnClickListener {
 
     fun arcade(v: View) {
         var intent = Intent(this, MainActivity::class.java)
+        if (user != null)
+            intent.putExtra("uid", user!!.uid)
+        else
+            intent.putExtra("uid", 0)
+        startActivity(intent)
+        finish()
+    }
+
+    fun friends(v: View) {
+        var intent = Intent(this, FriendsActivity::class.java)
         if (user != null)
             intent.putExtra("uid", user!!.uid)
         else

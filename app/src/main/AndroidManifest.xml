@@ -20,6 +20,7 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".gui.DisplayFinish" />
         <activity android:name=".gui.ScoresActivity" />
+        <activity android:name=".gui.FriendsActivity" />
     </application>
 
 </manifest>

@@ -44,11 +44,14 @@ class ScoresActivity: Activity() {
         }
 
         scores.sort()
-
-        var adapter_r = ArrayAdapter<Double>(this, android.R.layout.simple_list_item_1, scores!!)
+        var scores_string: ArrayList<String> = ArrayList()
+        i = 1
+        for (score in scores!!) {
+            scores_string.add("$i) $score")
+        }
+        var adapter_r = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, scores_string!!)
         lvScores!!.adapter = adapter_r
         adapter_r.notifyDataSetChanged()
-
     }
 
     fun close(v: View) {

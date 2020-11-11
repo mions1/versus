@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="FRIENDS"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/category_text_size"
+        android:layout_weight="0"
+        />
+
+    <ListView
+        android:id="@+id/lvFriends"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        />
+
+    <EditText
+        android:id="@+id/etFriend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Friend name"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:text="Add Friend"
+        android:onClick="addFriend"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:text="Chiudi"
+        android:onClick="close"
+        />
+
+</LinearLayout>
