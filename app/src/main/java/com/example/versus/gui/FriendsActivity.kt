@@ -42,31 +42,36 @@ class FriendsActivity: Activity() {
         var friend = etFriend!!.text.toString()
 
         if (searchFriend(friend)) {
+            if (yetFriends(friend)) {
+                val db = Firebase.firestore
+                var db_user_friends =
+                    db.collection("friends").document(intent.getStringExtra("uid")!!)
 
-            val db = Firebase.firestore
-            var db_user_friends = db.collection("friends").document(intent.getStringExtra("uid")!!)
+                var friends = db_user_friends.get()
+                var friends_list = ArrayList<String>()
+                var tmp_friend = hashMapOf(
+                    "friends" to friends_list
+                )
 
-            var friends = db_user_friends.get()
-            var friends_list = ArrayList<String>()
-            var tmp_friend = hashMapOf(
-                "friends" to friends_list
-            )
+                while (!friends.isComplete) {
+                }
+                if (friends.result?.data == null) {
+                    db.collection("friends").document(intent.getStringExtra("uid")!!)
+                        .set(tmp_friend)
+                } else {
+                    friends_list = friends.result!!.get("friends") as ArrayList<String>
+                }
 
-            while (!friends.isComplete) { }
-            if (friends.result?.data == null) {
+                friends_list.add(friend)
+
+                tmp_friend = hashMapOf(
+                    "friends" to friends_list
+                )
+
                 db.collection("friends").document(intent.getStringExtra("uid")!!).set(tmp_friend)
+            } else {
+                Toast.makeText(this, "Friend $friend is a friend yet", Toast.LENGTH_LONG).show()
             }
-            else {
-                friends_list = friends.result!!.get("friends") as ArrayList<String>
-            }
-
-            friends_list.add(friend)
-
-            tmp_friend = hashMapOf(
-                "friends" to friends_list
-            )
-
-            db.collection("friends").document(intent.getStringExtra("uid")!!).set(tmp_friend)
         }
         else {
             Toast.makeText(this, "Friend $friend not found", Toast.LENGTH_LONG).show()
@@ -76,8 +81,36 @@ class FriendsActivity: Activity() {
     }
 
     /**
+     * Check if the user that the user is trying to add is a friend yet
+     *
+     * @param friend friend that the user is trying to add
+     * @return true if the user is a friend yet, false otherwise
+     */
+    private fun yetFriends(friend: String): Boolean {
+
+        val db = Firebase.firestore
+        var db_user_friends = db.collection("friends").document(intent.getStringExtra("uid")!!)
+
+        var friends = db_user_friends.get()
+
+        while (!friends.isComplete) { }
+        if (friends.result?.data == null) {
+            Log.d("TAG_QUERY_FRIEND", "User has not a friends list")
+            return false
+        }
+
+        if ( (friends.result!!.get("friends") as ArrayList<String>).contains(friend) ) {
+            Log.d("TAG_QUERY_FRIEND", "Friend is a friend yet")
+            return true
+        }
+        Log.d("TAG_QUERY_FRIEND", "Friend is not a friend yet")
+        return false
+    }
+
+    /**
      * Check if the user that the user is trying to add exists
      *
+     * @param friend friend that the user is trying to add
      * @return true if the user exists, false otherwise
      */
     private fun searchFriend(friend: String): Boolean {
