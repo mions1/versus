@@ -42,7 +42,7 @@ class FriendsActivity: Activity() {
         var friend = etFriend!!.text.toString()
 
         if (searchFriend(friend)) {
-            if (yetFriends(friend)) {
+            if (!yetFriends(friend)) {
                 val db = Firebase.firestore
                 var db_user_friends =
                     db.collection("friends").document(intent.getStringExtra("uid")!!)
