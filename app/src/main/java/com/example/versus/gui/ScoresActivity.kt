@@ -45,7 +45,7 @@ class ScoresActivity: Activity() {
             i += 1
         }
 
-        scores.sort()
+        scores.sortDescending()
         var scores_string: ArrayList<String> = ArrayList()
         i = 1
         for (score in scores!!) {
