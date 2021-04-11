@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/color_white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -27,7 +28,7 @@
         >
 
         <Button
-            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            style="@style/button_primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Arcade"
@@ -35,7 +36,15 @@
             />
 
         <Button
-            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            style="@style/button_primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1v1"
+            android:onClick="arcade"
+            />
+
+        <Button
+            style="@style/button_primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Scores"
@@ -43,7 +52,7 @@
             />
 
         <Button
-            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            style="@style/button_primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Friends"
@@ -51,7 +60,7 @@
             />
 
         <Button
-            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            style="@style/button_primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Esci"

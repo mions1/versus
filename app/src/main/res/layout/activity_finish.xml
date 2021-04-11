@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="FINISH"
-        android:textSize="100dp"
-        android:layout_gravity="center_horizontal"
-        />
-
-    <ScrollView
+        style="@style/text_headline6"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true" >
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:background="@color/color_primary1"
+        android:text="FINISH" />
 
-        <LinearLayout
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -42,7 +44,7 @@
                         android:layout_height="wrap_content"
                         android:text="Giuste"
                         android:textSize="40dp"
-                        android:textColor="@color/colorRightAnswers"
+                        android:textColor="@color/color_success"
                         />
 
                     <ListView
@@ -64,7 +66,7 @@
                         android:layout_height="wrap_content"
                         android:text="Sbagliate"
                         android:textSize="40dp"
-                        android:textColor="@color/colorWrongAnswers"
+                        android:textColor="@color/color_fail"
                         />
 
                     <ListView
@@ -89,7 +91,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Totale: "
-                    android:textColor="@color/colorRightAnswers"
+                    android:textColor="@color/color_success"
                     android:layout_weight="1"
                     />
 
@@ -98,23 +100,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Totale: "
-                    android:textColor="@color/colorWrongAnswers"
+                    android:textColor="@color/color_fail"
                     android:layout_weight="1"
                     />
 
             </LinearLayout>
 
             <TextView
+                style="@style/text_subtitle2"
                 android:id="@+id/tvScore"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="SCORE: "
                 android:layout_gravity="center_horizontal"
+                android:background="@color/color_primary1"
                 android:textStyle="bold"
                 android:textSize="30dp"
                 />
 
-            <Button
+        <Button
+                style="@style/button_home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Chiudi"
@@ -122,6 +127,7 @@
                 />
 
         </LinearLayout>
-    </ScrollView>
+
 
 </LinearLayout>
+</ScrollView>

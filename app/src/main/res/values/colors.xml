@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
+    <color name="color_success">#43A047</color>
+    <color name="color_fail">#E53935</color>
+
+    <color name="color_primary1">#F9C784</color>
+    <color name="color_primary2">#BB8082</color>
+
+    <color name="color_secondary1">#E7E7E7</color>
+    <color name="color_secondary2">#6E7582</color>
+
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+
+    <color name="color_black">#232323</color>
+    <color name="color_white">#FCFCFC</color>
+
     <color name="colorGameBg">#FFFFFF</color>
     <color name="colorGameCatA">#FF7373</color>
     <color name="colorGameCatB">#447EDB</color>
-    <color name="colorRightAnswers">#00FF00</color>
-    <color name="colorWrongAnswers">#FF0000</color>
 </resources>
