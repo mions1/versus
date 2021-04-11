@@ -274,12 +274,12 @@ class MainActivity : Activity(), GestureDetector.OnGestureListener, GestureDetec
             this.tvTimer!!.text = "00:" + sec.toString()
 
         if (sec % 2 == 0) {
-            tvTimer!!.setBackgroundResource(R.color.colorGameCatA)
-            tvTimer!!.setTextColor(resources.getColor(R.color.colorGameCatB))
+            tvTimer!!.setBackgroundResource(R.color.color_primary1)
+            tvTimer!!.setTextColor(resources.getColor(R.color.color_secondary1))
         }
         else {
-            tvTimer!!.setBackgroundResource(R.color.colorGameCatB)
-            tvTimer!!.setTextColor(resources.getColor(R.color.colorGameCatA))
+            tvTimer!!.setBackgroundResource(R.color.color_secondary1)
+            tvTimer!!.setTextColor(resources.getColor(R.color.color_primary1))
         }
         if (sec <= 0) {
             game!!.gameover = true
